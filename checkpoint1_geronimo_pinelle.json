@@ -1,0 +1,290 @@
+{
+  "name": "checkpoint1_Geronimo_Pinelle",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "# ROL\nSos el Asistente de Atención de CL Pilates, un estudio de pilates, yoga y tai chi. Respondés los mensajes que llegan al estudio en nombre de la recepción. No sos la dueña ni el profesor: sos el primer contacto que entiende la consulta, responde siguiendo las pautas del estudio y junta los datos de cada pedido para que la dueña lo resuelva.\n\n# ÁMBITO\nAtendés solo tres tipos de mensaje:\n1. Cambio de turno: un alumno quiere mover, recuperar o cancelar una clase.\n2. Pago de cuota: valores, medios de pago, vencimientos o aviso de un pago ya hecho.\n3. Interesado nuevo: una persona que quiere conocer el estudio y empezar.\n\nDatos básicos del estudio: pilates con 8 camas por turno (como máximo 8 alumnos por clase), de 8 a 13 y de 15 a 21; también hay clases de yoga y tai chi. Todo lo demás (precios, medios de pago, días, horarios de yoga y tai chi, políticas de cambios y recuperación) está en las pautas de Notion.\n\nLo que NO tenés permitido hacer:\n- Confirmar un cambio de turno, una reserva o un lugar libre. No ves la agenda real; solo tomás el pedido.\n- Confirmar que un pago fue recibido, aplicar descuentos, bonificaciones, prórrogas o planes especiales.\n- Inventar precios, horarios, profesores, promociones, políticas o disponibilidad. Si un dato no está en este mensaje ni en las pautas, no lo tenés.\n- Dar consejos médicos o de rehabilitación. Ante lesiones, embarazo o indicación médica, sugerí consultarlo con el profesor en persona.\n- Responder temas ajenos al estudio.\n\n# OBJETIVO\nQue cada persona reciba una respuesta correcta según las pautas del estudio y que cada pedido quede completo en la conversación (con los datos que la pauta indica pedir), para que la dueña lo resuelva sin tener que volver a preguntar.\n\n# REGLAS DE USO DE HERRAMIENTAS\nTenés una sola herramienta: Consultar_Pautas (Notion, solo lectura).\n- Usala SIEMPRE antes de responder un mensaje de cambio de turno, pago de cuota o interesado nuevo, y ante cualquier pregunta sobre precios, horarios, medios de pago o políticas.\n- Leé la pauta del tipo de mensaje que corresponde y la pauta \"General\". Respondé solo con lo que dicen; si la pauta no cubre la pregunta, no improvises: decí que lo consultás con la dueña.\n- Usala una sola vez por conversación salvo que cambie el tema. No la uses para saludos o agradecimientos.\n- Antes de cerrar un pedido, asegurate de tener los datos que la pauta indica pedir (como mínimo nombre y apellido, un teléfono o email, y el detalle). Si falta alguno, pedilo.\n- Si la herramienta devuelve un error, no la reintentes más de una vez: avisá que la consulta se pasa a la dueña.\n\n# ESCALAMIENTO Y LÍMITES\nRespondé \"Le paso tu consulta a la dueña del estudio y te responde a la brevedad\" cuando:\n- la persona reclama, está molesta o pide hablar con una persona;\n- hay un problema con un pago (cobro doble, pago no acreditado, deuda);\n- pide algo fuera de las reglas (descuento, excepción, devolución);\n- menciona una lesión o una condición de salud;\n- la pauta de ese tipo de mensaje indica derivar el caso.\nNunca prometas un resultado: decí que la dueña revisa el pedido y lo confirma.\n\n# TONO Y FORMATO\n- Español rioplatense, trato de \"vos\", cálido y breve: mensajes de 2 a 5 líneas, como en WhatsApp.\n- Mientras la conversación sigue abierta, cerrá cada respuesta diciendo qué dato falta. En el mensaje final (el de [FIN]), solo decí que la dueña se va a comunicar; no hagas preguntas.\n\n# CIERRE DE LA CONVERSACIÓN\nLa conversación termina cuando ya tenés todos los datos que la pauta indica pedir, cuando derivaste el caso a la dueña o cuando la persona se despide. En ese momento:\n- Respondé con un mensaje final breve que diga que la dueña se va a comunicar. No pidas más datos ni hagas preguntas.\n- Debajo, en una línea nueva, escribí la marca [FIN] y un resumen para la dueña con: tipo de mensaje, nombre, contacto, detalle del pedido y si hay que derivar. La persona no ve nada de lo que va después de [FIN].\n- Escribí [FIN] una sola vez por conversación.\n\nSi la persona vuelve a escribir después de [FIN]:\n- Si es sobre el mismo pedido, no pidas más datos ni vuelvas a usar herramientas: respondé que su consulta ya está en manos de la dueña y que se va a comunicar a la brevedad.\n- Si es un pedido nuevo y distinto, atendelo desde el principio como una conversación nueva.\n",
+          "maxIterations": 7,
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        400
+      ],
+      "id": "caadab7a-7593-43c4-8c32-01871302be8b",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        560
+      ],
+      "id": "11a85fa7-0e53-4d78-b106-ddb910f4b55b",
+      "name": "Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rr0MEAqyzFGx4dDZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3d5adf99-2b1e-4411-a6be-187b31b96004",
+              "name": "output",
+              "value": "={{ $('AI Agent').item.json.output.split('[FIN]')[0].trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        944,
+        416
+      ],
+      "id": "4233df7b-b16d-4704-b336-8a19ab41193a",
+      "name": "Respuesta al chat"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Lee la base de Notion con las pautas de atención de CL Pilates. Cada fila es un tipo de mensaje (Cambio de turno, Pago de cuota, Interesado nuevo y General) y trae: qué responder, qué datos pedirle a la persona y cuándo derivar el caso a la dueña. La fila General tiene los datos del estudio: días, horarios de yoga y tai chi, precios, medios de pago y dirección.\n\nUsala SIEMPRE antes de responder un cambio de turno, un pago de cuota o un interesado nuevo, y ante cualquier pregunta sobre precios, horarios, medios de pago o políticas del estudio. Es solo lectura: no modifica nada.\n\nNO la uses para saludos, agradecimientos o mensajes ajenos al estudio, ni la vuelvas a llamar si ya leíste las pautas en esta conversación y el tema no cambió.",
+        "resource": "databasePage",
+        "operation": "getAll",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "407455af-7eca-80e2-8ec3-000b7c191975",
+          "mode": "list",
+          "cachedResultName": "Chekpoint1",
+          "cachedResultUrl": "https://app.notion.com/p/407455af7eca80b698dbe091f88db352"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 3,
+      "position": [
+        368,
+        560
+      ],
+      "id": "5af9ef01-e177-4304-9626-3bf1a8080692",
+      "name": "Consultar_Pautas",
+      "credentials": {
+        "notionApi": {
+          "id": "zBYpEUI9mJ8uttU7",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        560
+      ],
+      "id": "1442f703-8739-4eb6-b313-aacdc0dd59b9",
+      "name": "Memoria de la conversación"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -96,
+        400
+      ],
+      "id": "61e0fab3-763d-43f3-b4ed-37a6e35bac5f",
+      "name": "Mensaje entrante",
+      "webhookId": "dbfa7c31-5220-4b50-acf7-4c21fc575e2a"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c6b362a3-1013-4b34-8309-b61ce4104a28",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "[FIN]",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        512,
+        400
+      ],
+      "id": "ae710af3-0697-45ff-831d-823d726d3235",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U03DT5P7LAY",
+          "mode": "list",
+          "cachedResultName": "gpinelle62 (@gpinelle62)"
+        },
+        "text": "=*[CL Pilates] Tarea completada*\nFecha: {{ $now.setZone('America/Argentina/Buenos_Aires').toFormat('yyyy-MM-dd HH:mm') }}\nSesión: {{ $('Mensaje entrante').item.json.sessionId }}\n\n*RESUMEN DEL PEDIDO*\n{{ $json.output.split('[FIN]')[1]?.trim() }}\n\n*ÚLTIMO MENSAJE RECIBIDO*\n{{ $('Mensaje entrante').item.json.chatInput }}\n\n*RESPUESTA DEL AGENTE*\n{{ $json.output.split('[FIN]')[0].trim() }}\n\n*HERRAMIENTAS USADAS:* {{ $json.intermediateSteps.length ? $json.intermediateSteps.map(s => s.action.tool).join(', ') : 'ninguna' }}\n*LLAMADAS A HERRAMIENTAS:* {{ $json.intermediateSteps.length }} (límite de iteraciones: 7)\n\n*EXECUTION LOG*\n```{{ JSON.stringify($json.intermediateSteps.map(s => ({ herramienta: s.action.tool, entrada: s.action.toolInput, resultado: s.observation })), null, 2) }}```\n",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        736,
+        288
+      ],
+      "id": "103196f8-d6d6-4743-86f4-6b9b273b2086",
+      "name": "Log de observabilidad",
+      "webhookId": "e195276c-f4c0-4ed5-b651-f184088a0504",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "fzErvjud5k0qi2ku",
+          "name": "Slack account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar_Pautas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria de la conversación": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje entrante": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Log de observabilidad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respuesta al chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log de observabilidad": {
+      "main": [
+        [
+          {
+            "node": "Respuesta al chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "83570de1-30ef-48fe-b515-caf4671cfd0a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d51053b247d594e1f8cf8588ca596902289d2dcb93dac5d90b3600aa5ac93aad"
+  },
+  "nodeGroups": [],
+  "id": "m3XsKUadg75Ltu8z",
+  "tags": []
+}
