@@ -166,7 +166,7 @@
           "mode": "list",
           "cachedResultName": "gpinelle62 (@gpinelle62)"
         },
-        "text": "=*[CL Pilates] Tarea completada*\nFecha: {{ $now.setZone('America/Argentina/Buenos_Aires').toFormat('yyyy-MM-dd HH:mm') }}\nSesión: {{ $('Mensaje entrante').item.json.sessionId }}\n\n*RESUMEN DEL PEDIDO*\n{{ $json.output.split('[FIN]')[1]?.trim() }}\n\n*ÚLTIMO MENSAJE RECIBIDO*\n{{ $('Mensaje entrante').item.json.chatInput }}\n\n*RESPUESTA DEL AGENTE*\n{{ $json.output.split('[FIN]')[0].trim() }}\n\n*HERRAMIENTAS USADAS:* {{ $json.intermediateSteps.length ? $json.intermediateSteps.map(s => s.action.tool).join(', ') : 'ninguna' }}\n*LLAMADAS A HERRAMIENTAS:* {{ $json.intermediateSteps.length }} (límite de iteraciones: 7)\n\n*EXECUTION LOG*\n```{{ JSON.stringify($json.intermediateSteps.map(s => ({ herramienta: s.action.tool, entrada: s.action.toolInput, resultado: s.observation })), null, 2) }}```\n",
+        "text": "=*[CL Pilates] Tarea completada*\nFecha: {{ $now.setZone('America/Argentina/Buenos_Aires').toFormat('yyyy-MM-dd HH:mm') }}\nSesión: {{ $('Mensaje entrante').item.json.sessionId }}\n\n*RESUMEN DEL PEDIDO*\n{{ $json.output.split('[FIN]')[1]?.trim() }}\n\n*ÚLTIMO MENSAJE RECIBIDO*\n{{ $('Mensaje entrante').item.json.chatInput }}\n\n*RESPUESTA DEL AGENTE*\n{{ $json.output.split('[FIN]')[0].trim() }}\n\n*HERRAMIENTAS USADAS:* {{ $json.intermediateSteps.length ? $json.intermediateSteps.map(s => s.action.tool).join(', ') : 'ninguna' }}\n*LLAMADAS A HERRAMIENTAS:* {{ $json.intermediateSteps.length }} (límite de iteraciones: 7)\n",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
@@ -279,7 +279,7 @@
     "binaryMode": "separate",
     "availableInMCP": true
   },
-  "versionId": "83570de1-30ef-48fe-b515-caf4671cfd0a",
+  "versionId": "4c4297c8-2dc4-43ab-9069-610328a7901c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d51053b247d594e1f8cf8588ca596902289d2dcb93dac5d90b3600aa5ac93aad"
